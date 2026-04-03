@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from supabase import create_client
-from google import genai
+import google.generativeai as genai
 
 load_dotenv()
 
@@ -18,7 +18,10 @@ if not GEMINI_API_KEY:
 # Supabase client
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# ✅ NEW Gemini client
-client = genai.Client(api_key=GEMINI_API_KEY)
+# ✅ Correct Gemini setup
+genai.configure(api_key=GEMINI_API_KEY)
+
+# Create model instance (instead of Client)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 print("Config loaded successfully 🚀")

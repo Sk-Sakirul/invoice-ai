@@ -1,7 +1,7 @@
 import json
 import hashlib
 import re
-from config import client, supabase
+from config import model, supabase
 
 # -----------------------------
 # 🧠 PROMPT TEMPLATE
