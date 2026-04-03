@@ -3,8 +3,8 @@
 An AI-powered full-stack application that extracts structured data from invoices using OCR and AI, stores it in a database, detects duplicates, and provides analytics through a modern dashboard.
 
 ## 🌐 Live Demo
-🔗 Frontend: https://your-frontend-url.vercel.app
-🔗 Backend API: https://your-backend-url.onrender.com
+🔗 Frontend: https://invoice-ai-mauve.vercel.app
+🔗 Backend API: https://invoice-ai-ennl.onrender.com
 
 ## 📦 GitHub Repository
 🔗 https://github.com/Sk-Sakirul/invoice-ai.git
