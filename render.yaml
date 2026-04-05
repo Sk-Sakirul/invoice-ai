@@ -1,12 +1,11 @@
 services:
   - type: web
     name: invoice-ai-backend
-    # ✅ Use Docker — the ONLY way to install tesseract + poppler on Render
-    # Native Python runtime does NOT allow apt-get or system package installs
     env: docker
     plan: free
+
     rootDir: backend
-    dockerfilePath: ./Dockerfile   # relative to rootDir (backend/)
+    dockerfilePath: ./Dockerfile
 
     envVars:
       - key: SUPABASE_URL
@@ -15,5 +14,3 @@ services:
         sync: false
       - key: OPENROUTER_API_KEY
         sync: false
-      # DO NOT add TESSERACT_PATH or POPPLER_PATH
-      # Docker installs them system-wide — they're found automatically

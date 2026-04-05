@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-# Install tesseract + poppler via apt (works inside Docker)
+# Install tesseract + poppler
 RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr \
     poppler-utils \
@@ -9,17 +9,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Verify both are installed — build fails here if missing
+# Verify installation (optional but good)
 RUN tesseract --version && pdftoppm -v
 
 WORKDIR /app
 
-# Copy requirements first (Docker layer cache — faster rebuilds)
+# Copy requirements
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all app code
+# Copy project files
 COPY . .
 
-# Render injects $PORT — never hardcode 8000 here
-CMD uvicorn main:app --host 0.0.0.0 --port $PORT
+# ✅ FIX: use JSON format + Render PORT
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port $PORT"]
