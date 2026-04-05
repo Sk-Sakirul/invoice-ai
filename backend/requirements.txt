@@ -4,5 +4,5 @@ python-dotenv
 supabase
 pytesseract
 pdf2image
-Pillow
-google-genai   
+Pillow  
+python-multipart
