@@ -1,19 +1,8 @@
 fastapi
-uvicorn[standard]
+uvicorn
 python-dotenv
-requests
-
-# Google / Gemini
-google-generativeai
-
-# Supabase
 supabase
-
-# File & OCR
 pytesseract
 pdf2image
-pillow
-
-# Optional but useful
-python-multipart
-aiofiles
+Pillow
+google-genai   

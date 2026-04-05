@@ -8,11 +8,18 @@ import io
 # 🔧 CONFIGURATION
 # -----------------------------
 
-# Set Tesseract path for Windows (local dev)
 if os.name == "nt":
+    # Windows (Local)
     tesseract_path = os.getenv("TESSERACT_PATH")
+    poppler_path = os.getenv("POPPLER_PATH")
+
     if tesseract_path:
         pytesseract.pytesseract.tesseract_cmd = tesseract_path
+
+else:
+    # ✅ Linux (Render)
+    pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
+    poppler_path = "/usr/bin"
 
 
 # -----------------------------
@@ -31,24 +38,12 @@ def extract_text(file_bytes: bytes, file_type: str) -> str:
 
             print("📄 Processing PDF file...")
 
-            # Windows → need poppler_path
-            if os.name == "nt":
-                poppler_path = os.getenv("POPPLER_PATH")
-
-                if not poppler_path:
-                    raise Exception(
-                        "POPPLER_PATH not set in environment variables (Windows)"
-                    )
-
-                pages = convert_from_bytes(
-                    file_bytes,
-                    dpi=200,
-                    poppler_path=poppler_path
-                )
-
-            else:
-                # Linux (Render) → poppler installed via apt
-                pages = convert_from_bytes(file_bytes, dpi=200)
+            # ✅ ALWAYS pass poppler_path (important fix)
+            pages = convert_from_bytes(
+                file_bytes,
+                dpi=200,
+                poppler_path=poppler_path
+            )
 
             print(f"📄 Total pages detected: {len(pages)}")
 
