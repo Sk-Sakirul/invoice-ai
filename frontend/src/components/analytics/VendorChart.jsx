@@ -22,43 +22,20 @@ const COLORS = [
   "#34d399",
 ];
 
-const s = {
-  wrap: {
-    background: "#10131a",
-    border: "1px solid #1e2535",
-    borderRadius: 14,
-    padding: "20px 22px",
-  },
-  head: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 20,
-  },
-  title: {
-    fontFamily: "var(--font-head)",
-    fontWeight: 700,
-    fontSize: "0.9375rem",
-    color: "#e8edf5",
-  },
-  sub: { fontSize: "0.78rem", color: "#4a5568", marginTop: 2 },
-  tooltip: {
-    background: "#161b26",
-    border: "1px solid #2a3347",
-    borderRadius: 8,
-    padding: "8px 14px",
-    fontSize: "0.8rem",
-    color: "#e8edf5",
-  },
-};
-
-const CustomTooltip = ({ active, payload }) => {
+const TooltipBox = ({ active, payload }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div style={s.tooltip}>
-      <div style={{ color: "#8b97b0", marginBottom: 2 }}>
+    <div
+      className="rounded-lg px-3.5 py-2 text-sm border"
+      style={{
+        background: "var(--bg3)",
+        borderColor: "var(--border2)",
+        color: "var(--text)",
+      }}
+    >
+      <p className="mb-0.5" style={{ color: "var(--text2)" }}>
         {payload[0].payload.vendor}
-      </div>
+      </p>
       <strong>
         $
         {Number(payload[0].value).toLocaleString("en-US", {
@@ -70,28 +47,30 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 export default function VendorChart({ data, loading }) {
-  if (loading)
-    return (
-      <div style={s.wrap}>
-        <Loader text="Loading vendor data…" />
-      </div>
-    );
-
   const top10 = (data || [])
     .slice(0, 10)
     .map((d) => ({ ...d, shortName: truncate(d.vendor, 14) }));
 
   return (
-    <div style={s.wrap}>
-      <div style={s.head}>
-        <div>
-          <div style={s.title}>Spend by Vendor</div>
-          <div style={s.sub}>
-            Top {top10.length} vendors by total invoice amount
-          </div>
-        </div>
+    <div
+      className="rounded-[14px] p-5 border"
+      style={{ background: "var(--bg2)", borderColor: "var(--border)" }}
+    >
+      <div className="mb-5">
+        <p
+          className="font-semibold text-[15px] font-head"
+          style={{ color: "var(--text)", fontFamily: "var(--font-head)" }}
+        >
+          Spend by Vendor
+        </p>
+        <p className="text-[12px] mt-0.5" style={{ color: "var(--text3)" }}>
+          Top {top10.length} vendors by total amount
+        </p>
       </div>
-      {top10.length === 0 ? (
+
+      {loading ? (
+        <Loader text="Loading vendor data…" />
+      ) : top10.length === 0 ? (
         <EmptyState
           icon="📊"
           title="No vendor data yet"
@@ -118,7 +97,7 @@ export default function VendorChart({ data, loading }) {
               }
             />
             <Tooltip
-              content={<CustomTooltip />}
+              content={<TooltipBox />}
               cursor={{ fill: "rgba(59,130,246,0.05)" }}
             />
             <Bar dataKey="total" radius={[6, 6, 0, 0]}>

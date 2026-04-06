@@ -1,53 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import Sidebar, { MobileSidebar } from "./components/common/Sidebar";
 import Navbar from "./components/common/Navbar";
 import AppRoutes from "./routes/AppRoutes";
 
-const s = {
-  app: { display: "flex", minHeight: "100vh", background: "var(--bg)" },
-  // Desktop sidebar — hidden on mobile via media query workaround
-  desktopSidebar: { display: "flex" },
-  main: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    minWidth: 0,
-    overflowX: "hidden",
-  },
-  content: { flex: 1, overflowY: "auto" },
-};
-
 export default function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 768) setMobileOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   return (
     <BrowserRouter>
-      <div style={s.app}>
-        {/* Desktop sidebar — visible ≥ 768px */}
+      <div className="flex min-h-screen" style={{ background: "var(--bg)" }}>
+        {/* Desktop sidebar */}
         <div className="sidebar-desktop">
           <Sidebar />
         </div>
 
-        {/* Mobile sidebar — overlay */}
+        {/* Mobile slide-in sidebar */}
         <MobileSidebar open={mobileOpen} onClose={() => setMobileOpen(false)} />
 
-        {/* Main area */}
-        <div style={s.main}>
+        {/* Main content */}
+        <div className="flex flex-col flex-1 min-w-0 overflow-x-hidden">
           <Navbar onMenuClick={() => setMobileOpen(true)} />
-          <div style={s.content}>
-            <AppRoutes />
-          </div>
+          <AppRoutes />
         </div>
       </div>
-
-      {/* Inline responsive style — no Tailwind needed */}
-      <style>{`
-        .sidebar-desktop { display: flex; }
-        @media (max-width: 768px) {
-          .sidebar-desktop { display: none; }
-        }
-      `}</style>
     </BrowserRouter>
   );
 }

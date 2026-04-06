@@ -1,50 +1,30 @@
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
-  Area,
-  AreaChart,
 } from "recharts";
 import { formatMonth } from "../../utils/format";
 import EmptyState from "../common/EmptyState";
 import Loader from "../common/Loader";
 
-const s = {
-  wrap: {
-    background: "#10131a",
-    border: "1px solid #1e2535",
-    borderRadius: 14,
-    padding: "20px 22px",
-  },
-  head: { marginBottom: 20 },
-  title: {
-    fontFamily: "var(--font-head)",
-    fontWeight: 700,
-    fontSize: "0.9375rem",
-    color: "#e8edf5",
-  },
-  sub: { fontSize: "0.78rem", color: "#4a5568", marginTop: 2 },
-  tooltip: {
-    background: "#161b26",
-    border: "1px solid #2a3347",
-    borderRadius: 8,
-    padding: "8px 14px",
-    fontSize: "0.8rem",
-    color: "#e8edf5",
-  },
-};
-
-const CustomTooltip = ({ active, payload, label }) => {
+const TooltipBox = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div style={s.tooltip}>
-      <div style={{ color: "#8b97b0", marginBottom: 2 }}>
+    <div
+      className="rounded-lg px-3.5 py-2 text-sm border"
+      style={{
+        background: "var(--bg3)",
+        borderColor: "var(--border2)",
+        color: "var(--text)",
+      }}
+    >
+      <p className="mb-0.5" style={{ color: "var(--text2)" }}>
         {formatMonth(label)}
-      </div>
+      </p>
       <strong>
         $
         {Number(payload[0].value).toLocaleString("en-US", {
@@ -56,22 +36,28 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function MonthlyChart({ data, loading }) {
-  if (loading)
-    return (
-      <div style={s.wrap}>
-        <Loader text="Loading trends…" />
-      </div>
-    );
-
   const chartData = (data || []).map((d) => ({ ...d, label: d.month }));
 
   return (
-    <div style={s.wrap}>
-      <div style={s.head}>
-        <div style={s.title}>Monthly Spend Trend</div>
-        <div style={s.sub}>Total invoice spend over time</div>
+    <div
+      className="rounded-[14px] p-5 border"
+      style={{ background: "var(--bg2)", borderColor: "var(--border)" }}
+    >
+      <div className="mb-5">
+        <p
+          className="font-semibold text-[15px]"
+          style={{ color: "var(--text)", fontFamily: "var(--font-head)" }}
+        >
+          Monthly Spend Trend
+        </p>
+        <p className="text-[12px] mt-0.5" style={{ color: "var(--text3)" }}>
+          Total invoice spend over time
+        </p>
       </div>
-      {chartData.length === 0 ? (
+
+      {loading ? (
+        <Loader text="Loading trends…" />
+      ) : chartData.length === 0 ? (
         <EmptyState
           icon="📈"
           title="No trend data yet"
@@ -109,7 +95,7 @@ export default function MonthlyChart({ data, loading }) {
                 `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`
               }
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<TooltipBox />} />
             <Area
               type="monotone"
               dataKey="total"

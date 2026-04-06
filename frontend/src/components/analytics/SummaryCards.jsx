@@ -1,68 +1,5 @@
 import { FileText, DollarSign, AlertTriangle, TrendingUp } from "lucide-react";
 
-const s = {
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px,1fr))",
-    gap: 16,
-  },
-  card: {
-    background: "#10131a",
-    border: "1px solid #1e2535",
-    borderRadius: 14,
-    padding: "20px 22px",
-    position: "relative",
-    overflow: "hidden",
-  },
-  top: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 14,
-  },
-  label: {
-    fontSize: "0.75rem",
-    color: "#4a5568",
-    textTransform: "uppercase",
-    letterSpacing: "0.08em",
-    fontWeight: 500,
-  },
-  iconWrap: (color) => ({
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    background: `${color}18`,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }),
-  value: {
-    fontFamily: "var(--font-head)",
-    fontSize: "1.75rem",
-    fontWeight: 800,
-    color: "#e8edf5",
-    lineHeight: 1,
-  },
-  sub: { fontSize: "0.78rem", color: "#4a5568", marginTop: 6 },
-  glow: (color) => ({
-    position: "absolute",
-    bottom: -30,
-    right: -20,
-    width: 80,
-    height: 80,
-    borderRadius: "50%",
-    background: `${color}12`,
-    filter: "blur(20px)",
-    pointerEvents: "none",
-  }),
-  skel: {
-    background: "linear-gradient(90deg,#161b26 25%,#1e2535 50%,#161b26 75%)",
-    backgroundSize: "200% 100%",
-    animation: "shimmer 1.4s infinite",
-    borderRadius: 6,
-  },
-};
-
 const CARDS = [
   {
     key: "total_invoices",
@@ -97,22 +34,44 @@ const CARDS = [
 
 export default function SummaryCards({ data, loading }) {
   return (
-    <div style={s.grid}>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {CARDS.map(({ key, label, icon: Icon, color, fmt }) => (
-        <div key={key} style={s.card} className="fade-in">
-          <div style={s.top}>
-            <span style={s.label}>{label}</span>
-            <div style={s.iconWrap(color)}>
+        <div
+          key={key}
+          className="relative rounded-[14px] p-5 overflow-hidden border fade-in"
+          style={{ background: "var(--bg2)", borderColor: "var(--border)" }}
+        >
+          {/* Top row */}
+          <div className="flex items-center justify-between mb-3.5">
+            <span
+              className="text-[11px] font-medium uppercase tracking-[0.08em]"
+              style={{ color: "var(--text3)" }}
+            >
+              {label}
+            </span>
+            <div
+              className="w-9 h-9 rounded-[10px] flex items-center justify-center"
+              style={{ background: `${color}18` }}
+            >
               <Icon size={16} color={color} />
             </div>
           </div>
+
+          {/* Value */}
           {loading ? (
-            <div style={{ ...s.skel, height: 32, width: "60%" }} />
+            <div className="shimmer h-8 w-3/5 rounded-md" />
           ) : (
-            <div style={s.value}>{data ? fmt(data[key] ?? 0) : "—"}</div>
+            <div
+              className="text-[1.75rem] font-extrabold leading-none font-head"
+              style={{ color: "var(--text)", fontFamily: "var(--font-head)" }}
+            >
+              {data ? fmt(data[key] ?? 0) : "—"}
+            </div>
           )}
+
+          {/* Sub text */}
           {!loading && data && (
-            <div style={s.sub}>
+            <p className="text-[12px] mt-1.5" style={{ color: "var(--text3)" }}>
               {key === "total_invoices" &&
                 `${data.successful_extractions ?? 0} successful extractions`}
               {key === "total_spend" &&
@@ -120,9 +79,14 @@ export default function SummaryCards({ data, loading }) {
               {key === "duplicates_found" &&
                 `out of ${data.total_invoices} total`}
               {key === "avg_confidence" && "extraction confidence score"}
-            </div>
+            </p>
           )}
-          <div style={s.glow(color)} />
+
+          {/* Glow */}
+          <div
+            className="absolute -bottom-8 -right-5 w-20 h-20 rounded-full pointer-events-none"
+            style={{ background: `${color}12`, filter: "blur(20px)" }}
+          />
         </div>
       ))}
     </div>

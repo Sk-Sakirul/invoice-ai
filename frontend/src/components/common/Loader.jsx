@@ -1,33 +1,16 @@
-const styles = {
-  wrap: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 12,
-    padding: "64px 24px",
-    color: "#4a5568",
-  },
-  icon: { fontSize: 40, marginBottom: 8 },
-  title: { fontSize: "1rem", fontWeight: 600, color: "#8b97b0" },
-  sub: {
-    fontSize: "0.875rem",
-    color: "#4a5568",
-    textAlign: "center",
-    maxWidth: 320,
-  },
-};
-
-export default function EmptyState({
-  icon = "📭",
-  title = "Nothing here yet",
-  subtitle = "",
-}) {
+export default function Loader({ text = "Loading…" }) {
   return (
-    <div style={styles.wrap}>
-      <div style={styles.icon}>{icon}</div>
-      <p style={styles.title}>{title}</p>
-      {subtitle && <p style={styles.sub}>{subtitle}</p>}
+    <div className="flex flex-col items-center justify-center gap-3 py-16 px-6">
+      <div
+        className="w-9 h-9 rounded-full border-[3px] spinner"
+        style={{
+          borderColor: "var(--border2)",
+          borderTopColor: "var(--accent)",
+        }}
+      />
+      <span className="text-sm" style={{ color: "var(--text2)" }}>
+        {text}
+      </span>
     </div>
   );
 }
